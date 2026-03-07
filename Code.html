@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>North Modern Media — Local Digital Presence Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8191A;
+    --red-dim: rgba(232,25,26,0.18);
+    --red-glow: rgba(232,25,26,0.35);
+    --black: #0A0A0A;
+    --surface: #111111;
+    --surface2: #161616;
+    --border: rgba(255,255,255,0.08);
+    --white: #FFFFFF;
+    --muted: rgba(255,255,255,0.5);
+    --muted2: rgba(255,255,255,0.28);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%;
+    height: 68px;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+  nav.scrolled { background: rgba(10,10,10,0.97); }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--red); }
+
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--red);
+    color: var(--white) !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 4px;
+    font-weight: 600 !important;
+  }
+  .nav-cta:hover { background: #c91415; color: var(--white) !important; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 4px;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--white); border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 68px; left: 0; right: 0; z-index: 999;
+    background: rgba(10,10,10,0.98);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 5%;
+    flex-direction: column; gap: 1rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--white); }
+  .mobile-menu a:last-child { border-bottom: none; }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 5%; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 5% 80px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* Red swoosh behind hero */
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    top: -10%; right: -15%;
+    width: 680px; height: 680px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(232,25,26,0.22) 0%, transparent 70%);
+    filter: blur(60px);
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    bottom: -5%; left: -10%;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(232,25,26,0.1) 0%, transparent 70%);
+    filter: blur(80px);
+  }
+
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 420px; gap: 4rem; align-items: center;
+    width: 100%; max-width: 1160px; margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--red-dim); border: 1px solid rgba(232,25,26,0.35);
+    color: #ff6b6b; padding: 0.35rem 0.9rem; border-radius: 100px;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    display: block; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--red); animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  h1 em { font-style: normal; color: var(--red); }
+
+  .hero-sub {
+    font-size: 1.05rem; color: var(--muted);
+    max-width: 520px; line-height: 1.75;
+    margin-top: 1.4rem;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .hero-ctas {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    margin-top: 2rem;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--red);
+    color: var(--white);
+    padding: 0.85rem 2rem;
+    border-radius: 5px;
+    font-family: var(--font-body);
+    font-size: 0.95rem; font-weight: 600;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 24px rgba(232,25,26,0.3);
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary:hover {
+    background: #c91415;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(232,25,26,0.45);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    padding: 0.85rem 2rem;
+    border-radius: 5px;
+    font-family: var(--font-body);
+    font-size: 0.95rem; font-weight: 600;
+    text-decoration: none; border: 1px solid rgba(255,255,255,0.25);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-outline:hover {
+    border-color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.05);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    display: flex; gap: 2rem; margin-top: 2.8rem; flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+  .stat { display: flex; flex-direction: column; gap: 0.1rem; }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 1.8rem; font-weight: 800; color: var(--white);
+  }
+  .stat-num span { color: var(--red); }
+  .stat-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+
+  /* Hero visual card */
+  .hero-visual {
+    animation: fadeLeft 0.8s 0.4s ease both;
+    position: relative;
+  }
+  .hero-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+  }
+  .hero-card-title {
+    font-family: var(--font-display);
+    font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.5rem;
+  }
+  .service-row {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .service-row:last-child { border-bottom: none; }
+  .service-icon {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: var(--red-dim); border: 1px solid rgba(232,25,26,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+  }
+  .service-row-label { flex: 1; color: rgba(255,255,255,0.85); font-weight: 500; }
+  .badge-done {
+    background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3);
+    color: #4ade80; padding: 0.2rem 0.6rem; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+  }
+  .badge-in-progress {
+    background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.3);
+    color: #fbbf24; padding: 0.2rem 0.6rem; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+  }
+  .hero-card-footer {
+    margin-top: 1.2rem; padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.8rem; color: var(--muted);
+  }
+  .progress-bar {
+    height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px;
+    overflow: hidden; flex: 1; margin-left: 0.8rem;
+  }
+  .progress-fill {
+    height: 100%; width: 72%; background: var(--red); border-radius: 2px;
+    animation: grow 1.5s 1.2s ease both;
+    transform-origin: left;
+  }
+  @keyframes grow { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+
+  /* ── SECTION HEADERS ── */
+  .section-label {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 1rem;
+  }
+  .section-label::before {
+    content: '';
+    display: block; width: 20px; height: 2px; background: var(--red);
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  h2 em { font-style: normal; color: var(--red); }
+
+  .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 560px; line-height: 1.7; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 30%, rgba(232,25,26,0.25) 50%, rgba(255,255,255,0.08) 70%, transparent);
+    margin: 0;
+  }
+
+  /* ── SERVICES ── */
+  #services { padding: 100px 0; }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    margin-top: 3.5rem;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .service-card {
+    background: var(--surface);
+    padding: 2rem;
+    transition: background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--red-dim), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .service-card:hover { background: var(--surface2); }
+  .service-card:hover::after { opacity: 1; }
+
+  .service-num {
+    font-family: var(--font-display);
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.12em; color: var(--red);
+    margin-bottom: 1.2rem;
+  }
+  .service-icon-lg {
+    font-size: 2rem; margin-bottom: 1rem;
+    position: relative; z-index: 1;
+  }
+  .service-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.15rem; font-weight: 700;
+    margin-bottom: 0.6rem;
+    position: relative; z-index: 1;
+  }
+  .service-card p {
+    font-size: 0.9rem; color: var(--muted); line-height: 1.65;
+    position: relative; z-index: 1;
+  }
+
+  /* ── HOW IT WORKS ── */
+  #process { padding: 100px 0; background: var(--surface); }
+
+  .process-steps {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    margin-top: 3.5rem; position: relative;
+  }
+  .process-steps::before {
+    content: '';
+    position: absolute; top: 28px; left: 12.5%; right: 12.5%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--red), rgba(232,25,26,0.3), var(--red));
+    z-index: 0;
+  }
+  .step {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 0 1.5rem;
+    position: relative; z-index: 1;
+  }
+  .step-num {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--red);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 1.2rem; font-weight: 800;
+    margin-bottom: 1.4rem;
+    box-shadow: 0 0 0 8px var(--surface), 0 0 30px rgba(232,25,26,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .step:hover .step-num {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px var(--surface), 0 0 50px rgba(232,25,26,0.6);
+  }
+  .step h3 {
+    font-family: var(--font-display);
+    font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;
+  }
+  .step p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── WHY CHOOSE US ── */
+  #why { padding: 100px 0; }
+
+  .why-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+    align-items: center; margin-top: 1rem;
+  }
+  .why-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+  .why-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1.2rem;
+    border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface);
+    transition: border-color 0.25s, transform 0.2s;
+  }
+  .why-item:hover { border-color: rgba(232,25,26,0.4); transform: translateX(6px); }
+  .why-check {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: var(--red-dim); border: 1px solid rgba(232,25,26,0.3);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 0.1rem; font-size: 0.85rem;
+  }
+  .why-item-text h4 {
+    font-family: var(--font-display);
+    font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem;
+  }
+  .why-item-text p { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  .why-visual {
+    position: relative;
+  }
+  .metrics-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem;
+    position: relative; overflow: hidden;
+  }
+  .metrics-card::before {
+    content: '';
+    position: absolute; bottom: 0; right: 0;
+    width: 200px; height: 200px;
+    background: radial-gradient(ellipse, rgba(232,25,26,0.15), transparent 70%);
+    filter: blur(30px);
+  }
+  .metric-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 0; border-bottom: 1px solid var(--border);
+  }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-name { font-size: 0.88rem; color: var(--muted); }
+  .metric-val {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--white);
+  }
+  .metric-change { font-size: 0.78rem; color: #4ade80; font-weight: 600; }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials { padding: 80px 0; background: var(--surface); }
+
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .testimonial-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.8rem;
+    transition: border-color 0.25s;
+    position: relative;
+  }
+  .testimonial-card:hover { border-color: rgba(232,25,26,0.3); }
+  .t-quote {
+    font-size: 2rem; color: var(--red); line-height: 1;
+    font-family: Georgia, serif; margin-bottom: 0.8rem;
+  }
+  .t-text { font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.7; margin-bottom: 1.2rem; }
+  .t-author { display: flex; align-items: center; gap: 0.8rem; }
+  .t-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), #800);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 700; font-size: 0.85rem;
+  }
+  .t-name { font-weight: 600; font-size: 0.88rem; }
+  .t-title { font-size: 0.78rem; color: var(--muted); }
+  .t-stars { color: var(--red); font-size: 0.85rem; margin-bottom: 0.8rem; }
+
+  /* ── PRICING ── */
+  #pricing { padding: 100px 0; }
+
+  .pricing-toggle {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 2.5rem auto 0; width: fit-content;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px; padding: 0.4rem;
+  }
+  .toggle-btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 100px; border: none;
+    font-family: var(--font-body); font-size: 0.88rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--muted); background: transparent;
+  }
+  .toggle-btn.active {
+    background: var(--red); color: var(--white);
+    box-shadow: 0 4px 16px rgba(232,25,26,0.35);
+  }
+
+  .pricing-content { margin-top: 3rem; }
+
+  /* One-time */
+  .onetime-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem;
+    max-width: 640px; margin: 0 auto;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .onetime-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+  }
+  .price-tag {
+    font-family: var(--font-display); font-size: 4rem; font-weight: 800;
+    color: var(--white); line-height: 1;
+  }
+  .price-tag sup { font-size: 1.8rem; vertical-align: super; color: var(--red); }
+  .price-note { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; }
+  .onetime-features {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;
+    margin: 2rem 0; text-align: left;
+  }
+  .feat-item {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-size: 0.9rem; color: rgba(255,255,255,0.85);
+  }
+  .feat-icon { color: var(--red); font-size: 1rem; flex-shrink: 0; }
+
+  /* Monthly plans */
+  .monthly-plans { display: none; }
+  .monthly-plans.active { display: block; }
+  .onetime-card { display: none; }
+  .onetime-card.active { display: block; }
+
+  .plans-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+  }
+  .plan-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .plan-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(232,25,26,0.4);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+  .plan-card.featured {
+    border-color: var(--red);
+    background: linear-gradient(160deg, rgba(232,25,26,0.08), var(--surface));
+    box-shadow: 0 0 40px rgba(232,25,26,0.2);
+  }
+  .plan-card.featured:hover {
+    box-shadow: 0 20px 60px rgba(232,25,26,0.35);
+  }
+  .featured-badge {
+    position: absolute; top: 1.2rem; right: 1.2rem;
+    background: var(--red); color: var(--white);
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 0.25rem 0.7rem; border-radius: 100px;
+  }
+  .plan-name {
+    font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase; color: var(--red);
+    margin-bottom: 0.5rem;
+  }
+  .plan-price {
+    font-family: var(--font-display); font-size: 2.8rem; font-weight: 800;
+    line-height: 1; margin-bottom: 0.3rem;
+  }
+  .plan-price sup { font-size: 1.2rem; vertical-align: super; color: var(--red); }
+  .plan-price sub { font-size: 0.85rem; color: var(--muted); font-family: var(--font-body); }
+  .plan-setup {
+    font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+  }
+  .plan-setup strong { color: #4ade80; }
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 2rem; }
+  .plan-features li {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.88rem; color: rgba(255,255,255,0.85);
+  }
+  .plan-features li .check { color: var(--red); flex-shrink: 0; margin-top: 1px; }
+  .plan-features li.muted { color: var(--muted2); }
+  .plan-features li.muted .check { color: var(--muted2); }
+
+  /* ── ESTIMATOR ── */
+  .estimator {
+    margin-top: 4rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem;
+    position: relative; overflow: hidden;
+  }
+  .estimator::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--red), #ff6b6b, var(--red));
+  }
+  .estimator-title {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+    margin-bottom: 0.4rem;
+  }
+  .estimator-sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; }
+
+  .estimator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+  .est-group label {
+    display: block; font-size: 0.82rem; font-weight: 600;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  .est-select {
+    width: 100%;
+    background: var(--black); border: 1px solid var(--border);
+    color: var(--white); padding: 0.75rem 1rem;
+    border-radius: 8px; font-family: var(--font-body); font-size: 0.92rem;
+    outline: none; transition: border-color 0.2s; cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+  .est-select:focus { border-color: var(--red); }
+
+  .est-summary {
+    grid-column: 1 / -1;
+    background: var(--black); border: 1px solid rgba(232,25,26,0.25);
+    border-radius: 12px; padding: 1.5rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .est-total-label { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .est-total-val {
+    font-family: var(--font-display); font-size: 2.5rem; font-weight: 800;
+    color: var(--red); line-height: 1;
+  }
+  .est-breakdown { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+
+  /* ── FAQ ── */
+  #faq { padding: 100px 0; background: var(--surface); }
+
+  .faq-list { margin-top: 3rem; max-width: 760px; margin-left: auto; margin-right: auto; }
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: 0.8rem;
+    overflow: hidden; transition: border-color 0.2s;
+  }
+  .faq-item.open { border-color: rgba(232,25,26,0.35); }
+  .faq-q {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+    cursor: pointer;
+    font-weight: 600; font-size: 0.95rem;
+    background: var(--surface2);
+    transition: background 0.2s;
+    gap: 1rem;
+  }
+  .faq-q:hover { background: var(--black); }
+  .faq-arrow {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--red-dim); border: 1px solid rgba(232,25,26,0.25);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 0.8rem; transition: transform 0.3s;
+  }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); background: var(--red); border-color: var(--red); }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+    font-size: 0.92rem; color: var(--muted); line-height: 1.75;
+  }
+  .faq-a-inner { padding: 0 1.5rem 1.3rem; }
+  .faq-item.open .faq-a { max-height: 300px; }
+
+  /* ── CONTACT ── */
+  #contact { padding: 100px 0; }
+
+  .contact-wrapper {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+    align-items: start; margin-top: 3rem;
+  }
+  .contact-info h3 {
+    font-family: var(--font-display); font-size: 1.6rem; font-weight: 800;
+    line-height: 1.2; margin-bottom: 1rem;
+  }
+  .contact-info p { color: var(--muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 2rem; }
+  .contact-detail {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.9rem 1rem; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 0.9rem;
+    text-decoration: none; color: var(--white);
+    transition: border-color 0.2s;
+    margin-bottom: 0.6rem;
+  }
+  .contact-detail:hover { border-color: rgba(232,25,26,0.4); }
+  .contact-icon {
+    width: 34px; height: 34px; border-radius: 6px;
+    background: var(--red-dim); border: 1px solid rgba(232,25,26,0.25);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label {
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--white); padding: 0.8rem 1rem;
+    border-radius: 8px; font-family: var(--font-body); font-size: 0.92rem;
+    outline: none; transition: border-color 0.2s;
+    resize: none;
+    width: 100%;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--red);
+  }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: var(--muted2); }
+  select option { background: #111; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 4rem 5% 2rem;
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 3rem;
+    margin-bottom: 3rem;
+  }
+  .footer-brand {}
+  .footer-logo {
+    font-family: var(--font-display); font-size: 1.1rem; font-weight: 800;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--white);
+    margin-bottom: 0.8rem;
+  }
+  .footer-logo span { color: var(--red); }
+  .footer-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+  .footer-col h4 {
+    font-family: var(--font-display); font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--white);
+    margin-bottom: 1rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .footer-col a {
+    font-size: 0.88rem; color: var(--muted); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+    font-size: 0.82rem; color: var(--muted);
+  }
+  .footer-bottom a { color: var(--red); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── GLOBAL RED ACCENTS ── */
+  .section-swoosh {
+    position: absolute; pointer-events: none; z-index: 0;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 960px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .process-steps { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+    .process-steps::before { display: none; }
+    .why-grid { grid-template-columns: 1fr; }
+    .why-visual { order: -1; }
+    .testimonials-grid { grid-template-columns: 1fr 1fr; }
+    .plans-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
+    .estimator-grid { grid-template-columns: 1fr; }
+    .contact-wrapper { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+  }
+
+  @media (max-width: 600px) {
+    .services-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .onetime-features { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+    .hero-stats { gap: 1.2rem; }
+    h1 { font-size: 2.4rem; }
+  }
+
+  /* Glow pulse animation for hero */
+  .red-orb {
+    position: absolute; border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,25,26,0.25), transparent 70%);
+    filter: blur(50px); pointer-events: none;
+    animation: orbFloat 8s ease-in-out infinite alternate;
+  }
+  @keyframes orbFloat {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(30px, -20px) scale(1.15); }
+  }
+
+  /* Vertical red line accent */
+  .red-line {
+    position: absolute; width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--red), transparent);
+    pointer-events: none; opacity: 0.4;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">North <span>Modern</span> Media</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact" class="nav-cta">Get Started</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services" onclick="closeMenu()">Services</a>
+  <a href="#process" onclick="closeMenu()">Process</a>
+  <a href="#why" onclick="closeMenu()">Why Us</a>
+  <a href="#pricing" onclick="closeMenu()">Pricing</a>
+  <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <a href="#contact" onclick="closeMenu()">Get Started →</a>
+</div>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="red-orb" style="width:600px;height:600px;top:-10%;right:-15%"></div>
+    <div class="red-orb" style="width:350px;height:350px;bottom:5%;left:-8%;animation-delay:-4s;opacity:0.5"></div>
+    <div class="red-line" style="left:8%;top:0;height:100%;"></div>
+    <div class="red-line" style="right:8%;top:0;height:100%;"></div>
+  </div>
+
+  <div class="hero-grid">
+    <div class="hero-content">
+      <div class="hero-badge">Now Onboarding Local Businesses</div>
+      <h1>We Build Your<br>Business <em>Online</em><br>Presence.</h1>
+      <p class="hero-sub">From social media setup to websites, branding, content creation, and paid growth — we handle everything so you can focus on running your business.</p>
+      <div class="hero-ctas">
+        <a href="#pricing" class="btn-primary">See Our Plans →</a>
+        <a href="#contact" class="btn-outline">Book a Free Call</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">150<span>+</span></div>
+          <div class="stat-label">Businesses Launched</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">3<span>×</span></div>
+          <div class="stat-label">Avg. Engagement Lift</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">48<span>hr</span></div>
+          <div class="stat-label">Setup Turnaround</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div class="hero-card-title">Your Digital Dashboard</div>
+        <div class="service-row">
+          <div class="service-icon">🌐</div>
+          <div class="service-row-label">Website Build</div>
+          <span class="badge-done">Live ✓</span>
+        </div>
+        <div class="service-row">
+          <div class="service-icon">📱</div>
+          <div class="service-row-label">Instagram Setup</div>
+          <span class="badge-done">Live ✓</span>
+        </div>
+        <div class="service-row">
+          <div class="service-icon">🎨</div>
+          <div class="service-row-label">Brand Identity</div>
+          <span class="badge-done">Live ✓</span>
+        </div>
+        <div class="service-row">
+          <div class="service-icon">📊</div>
+          <div class="service-row-label">Ad Campaign</div>
+          <span class="badge-in-progress">In Progress</span>
+        </div>
+        <div class="service-row">
+          <div class="service-icon">✍️</div>
+          <div class="service-row-label">Content Calendar</div>
+          <span class="badge-in-progress">Scheduled</span>
+        </div>
+        <div class="hero-card-footer">
+          <span>Overall progress</span>
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <span style="margin-left:0.8rem;color:var(--red);font-weight:700">72%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="container">
+    <div class="section-label">What We Do</div>
+    <h2>Everything You Need to <em>Dominate</em><br>Your Local Market</h2>
+    <p class="section-sub">We're not a bloated agency — we're a focused team that builds real digital infrastructure for businesses ready to grow.</p>
+
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div class="service-icon-lg">🌐</div>
+        <h3>Website Design & Build</h3>
+        <p>Custom, conversion-optimized websites that load fast, look sharp on every device, and rank on Google.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div class="service-icon-lg">📱</div>
+        <h3>Social Media Setup</h3>
+        <p>Full account creation and optimization on Instagram, Facebook, Google Business, TikTok, and more.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <div class="service-icon-lg">🎨</div>
+        <h3>Branding & Identity</h3>
+        <p>Logo design, color systems, typography, and brand guides that make your business unforgettable.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <div class="service-icon-lg">✍️</div>
+        <h3>Content Creation</h3>
+        <p>Professional photos, graphics, captions, and video content produced on a consistent monthly schedule.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">05</div>
+        <div class="service-icon-lg">📈</div>
+        <h3>Paid Advertising</h3>
+        <p>Meta and Google ad campaigns managed by experts — built to attract local customers who convert.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">06</div>
+        <div class="service-icon-lg">🔄</div>
+        <h3>Ongoing Management</h3>
+        <p>Monthly reporting, content scheduling, site updates, and strategy calls so your presence keeps growing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="process">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label" style="justify-content:center">How It Works</div>
+      <h2>From Zero to <em>Live</em> in Days</h2>
+      <p class="section-sub" style="margin:0 auto">No complicated onboarding. No confusion. Just a clear path to getting your business online.</p>
+    </div>
+
+    <div class="process-steps reveal">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Discovery Call</h3>
+        <p>We learn your business, goals, and what you need. No fluff — just focused strategy.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Setup & Build</h3>
+        <p>Our team builds your website, social accounts, and brand identity from scratch.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Review & Launch</h3>
+        <p>You review everything, we make adjustments, and then we go live together.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Grow Monthly</h3>
+        <p>Ongoing content, ads, and management keep your presence active and growing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── WHY ── -->
+<section id="why">
+  <div class="container">
+    <div class="why-grid">
+      <div>
+        <div class="section-label">Why Choose Us</div>
+        <h2>Built for <em>Local</em><br>Businesses. Period.</h2>
+        <p class="section-sub">We're not a one-size-fits-all platform. We're a real team that understands local markets and builds real results.</p>
+        <div class="why-list reveal">
+          <div class="why-item">
+            <div class="why-check">✓</div>
+            <div class="why-item-text">
+              <h4>No Long-Term Contracts</h4>
+              <p>Stay because results keep you, not fine print. Cancel monthly plans anytime.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-check">✓</div>
+            <div class="why-item-text">
+              <h4>Fast 48-Hour Setup</h4>
+              <p>Most agencies take weeks. We get your foundation live within two business days.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-check">✓</div>
+            <div class="why-item-text">
+              <h4>Dedicated Point of Contact</h4>
+              <p>No ticket queues. You get a real person who knows your business inside and out.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-check">✓</div>
+            <div class="why-item-text">
+              <h4>Transparent Flat-Rate Pricing</h4>
+              <p>No surprise invoices. What you see is what you pay — every single month.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="why-visual reveal">
+        <div class="metrics-card">
+          <div style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;">Client Results Overview</div>
+          <div class="metric-row">
+            <span class="metric-name">Website Traffic (avg monthly)</span>
+            <div style="text-align:right">
+              <div class="metric-val">4.2K</div>
+              <div class="metric-change">↑ 238%</div>
+            </div>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">Instagram Followers Growth</span>
+            <div style="text-align:right">
+              <div class="metric-val">+830</div>
+              <div class="metric-change">↑ First 90 days</div>
+            </div>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">Google Review Impressions</span>
+            <div style="text-align:right">
+              <div class="metric-val">12K</div>
+              <div class="metric-change">↑ 3× baseline</div>
+            </div>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">Avg. Cost Per Lead (ads)</span>
+            <div style="text-align:right">
+              <div class="metric-val">$4.80</div>
+              <div class="metric-change" style="color:#60a5fa">Local avg: $14</div>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--muted)">Averages across active monthly clients · Updated Q1 2025</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── TESTIMONIALS ── -->
+<section id="testimonials">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label" style="justify-content:center">Client Stories</div>
+      <h2>Real Businesses. <em>Real Results.</em></h2>
+    </div>
+    <div class="testimonials-grid reveal">
+      <div class="testimonial-card">
+        <div class="t-stars">★★★★★</div>
+        <div class="t-quote">"</div>
+        <div class="t-text">North Modern Media completely transformed how people find us online. Our website went from a placeholder to something we're genuinely proud of — and it's brought in real customers.</div>
+        <div class="t-author">
+          <div class="t-avatar">MR</div>
+          <div>
+            <div class="t-name">Marcus R.</div>
+            <div class="t-title">Owner, Riverside Auto Detail</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="t-stars">★★★★★</div>
+        <div class="t-quote">"</div>
+        <div class="t-text">I was skeptical about spending money on digital marketing, but they showed me the numbers clearly. In three months we doubled our Instagram following and got 40% more calls from Google.</div>
+        <div class="t-author">
+          <div class="t-avatar">TL</div>
+          <div>
+            <div class="t-name">Tanya L.</div>
+            <div class="t-title">Owner, TL Salon & Spa</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="t-stars">★★★★★</div>
+        <div class="t-quote">"</div>
+        <div class="t-text">The setup was faster than I imagined. Two days after our call, my whole digital presence was live. The team is sharp, responsive, and actually cares about growing your business.</div>
+        <div class="t-author">
+          <div class="t-avatar">JC</div>
+          <div>
+            <div class="t-name">James C.</div>
+            <div class="t-title">Founder, Cornerstone HVAC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label" style="justify-content:center">Pricing</div>
+      <h2>Simple, Transparent <em>Pricing</em></h2>
+      <p class="section-sub" style="margin:0 auto">No hidden fees. No agency markup games. Just clear value for your business.</p>
+    </div>
+
+    <div class="pricing-toggle">
+      <button class="toggle-btn active" id="btnOnetime" onclick="switchPlan('onetime')">One-Time Setup</button>
+      <button class="toggle-btn" id="btnMonthly" onclick="switchPlan('monthly')">Monthly Plans</button>
+    </div>
+
+    <div class="pricing-content">
+
+      <!-- ONE-TIME -->
+      <div class="onetime-card active" id="onetimeSection">
+        <div style="font-family:var(--font-display);font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);margin-bottom:0.8rem;">Complete Setup Package</div>
+        <div class="price-tag"><sup>$</sup>399</div>
+        <div class="price-note">One-time payment · No recurring fees</div>
+        <div class="onetime-features">
+          <div class="feat-item"><span class="feat-icon">✓</span> Social media account creation</div>
+          <div class="feat-item"><span class="feat-icon">✓</span> Profile optimization & bio</div>
+          <div class="feat-item"><span class="feat-icon">✓</span> Starter website build</div>
+          <div class="feat-item"><span class="feat-icon">✓</span> Mobile responsive design</div>
+          <div class="feat-item"><span class="feat-icon">✓</span> Google Business Profile setup</div>
+          <div class="feat-item"><span class="feat-icon">✓</span> Brand colors & fonts applied</div>
+          <div class="feat-item"><span class="feat-icon">✓</span> Domain & hosting guidance</div>
+          <div class="feat-item"><span class="feat-icon">✓</span> 30-day post-launch support</div>
+        </div>
+        <a href="#contact" class="btn-primary" style="width:100%;justify-content:center">Get Your Setup Started →</a>
+        <p style="font-size:0.82rem;color:var(--muted);margin-top:1rem;">Upgrade to a monthly plan anytime — setup fee drops to <strong style="color:#4ade80">$299</strong>.</p>
+      </div>
+
+      <!-- MONTHLY -->
+      <div class="monthly-plans" id="monthlySection">
+        <p style="text-align:center;color:var(--muted);font-size:0.9rem;margin-bottom:2rem;">All monthly plans include setup at a <strong style="color:#4ade80">discounted $299</strong> (vs. $399 standalone)</p>
+        <div class="plans-grid">
+
+          <div class="plan-card">
+            <div class="plan-name">Basic</div>
+            <div class="plan-price"><sup>$</sup>397<sub>/mo</sub></div>
+            <div class="plan-setup">+ <strong>$299 setup</strong> (one-time, waived after 3 months)</div>
+            <ul class="plan-features">
+              <li><span class="check">✓</span> Social media account setup (2 platforms)</li>
+              <li><span class="check">✓</span> 8 posts/month (designed + scheduled)</li>
+              <li><span class="check">✓</span> Starter website (up to 4 pages)</li>
+              <li><span class="check">✓</span> Monthly performance report</li>
+              <li><span class="check">✓</span> Email support</li>
+              <li class="muted"><span class="check">–</span> Branding design package</li>
+              <li class="muted"><span class="check">–</span> Paid ad management</li>
+              <li class="muted"><span class="check">–</span> Strategy calls</li>
+            </ul>
+            <a href="#contact" class="btn-outline" style="width:100%;justify-content:center">Get Started</a>
+          </div>
+
+          <div class="plan-card featured">
+            <div class="featured-badge">Most Popular</div>
+            <div class="plan-name">Growth</div>
+            <div class="plan-price"><sup>$</sup>797<sub>/mo</sub></div>
+            <div class="plan-setup">+ <strong>$299 setup</strong> (one-time, waived after 3 months)</div>
+            <ul class="plan-features">
+              <li><span class="check">✓</span> Social media setup (4 platforms)</li>
+              <li><span class="check">✓</span> 20 posts/month + story content</li>
+              <li><span class="check">✓</span> Full website build (up to 8 pages)</li>
+              <li><span class="check">✓</span> Full branding package (logo + guide)</li>
+              <li><span class="check">✓</span> Monthly website updates</li>
+              <li><span class="check">✓</span> Monthly strategy call</li>
+              <li><span class="check">✓</span> Priority support</li>
+              <li class="muted"><span class="check">–</span> Paid ad management</li>
+            </ul>
+            <a href="#contact" class="btn-primary" style="width:100%;justify-content:center">Get Started →</a>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-name">Premium</div>
+            <div class="plan-price"><sup>$</sup>1,497<sub>/mo</sub></div>
+            <div class="plan-setup">+ <strong>$299 setup</strong> (one-time, waived after 3 months)</div>
+            <ul class="plan-features">
+              <li><span class="check">✓</span> Everything in Growth</li>
+              <li><span class="check">✓</span> 30+ posts/month + Reels/video</li>
+              <li><span class="check">✓</span> Custom content photography brief</li>
+              <li><span class="check">✓</span> Meta + Google ad management</li>
+              <li><span class="check">✓</span> Up to $500/mo ad spend managed</li>
+              <li><span class="check">✓</span> Bi-weekly strategy calls</li>
+              <li><span class="check">✓</span> Reputation management</li>
+              <li><span class="check">✓</span> Dedicated account manager</li>
+            </ul>
+            <a href="#contact" class="btn-outline" style="width:100%;justify-content:center">Get Started</a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ESTIMATOR -->
+    <div class="estimator reveal">
+      <div class="estimator-title">💡 Build Your Custom Estimate</div>
+      <div class="estimator-sub">Mix and match your needs — see your monthly total update in real time.</div>
+
+      <div class="estimator-grid">
+        <div class="est-group">
+          <label>Plan Type</label>
+          <select class="est-select" id="estPlan" onchange="calcEstimate()">
+            <option value="0">One-Time Setup Only — $399</option>
+            <option value="397">Basic Monthly — $397/mo + $299 setup</option>
+            <option value="797">Growth Monthly — $797/mo + $299 setup</option>
+            <option value="1497">Premium Monthly — $1,497/mo + $299 setup</option>
+          </select>
+        </div>
+        <div class="est-group">
+          <label>Add-On: Extra Platforms</label>
+          <select class="est-select" id="estPlatforms" onchange="calcEstimate()">
+            <option value="0">None</option>
+            <option value="49">+1 Platform — $49/mo</option>
+            <option value="89">+2 Platforms — $89/mo</option>
+            <option value="129">+3 Platforms — $129/mo</option>
+          </select>
+        </div>
+        <div class="est-group">
+          <label>Add-On: Ad Spend Budget</label>
+          <select class="est-select" id="estAds" onchange="calcEstimate()">
+            <option value="0">No Ads</option>
+            <option value="99">Starter Ads $100/mo — +$99 management</option>
+            <option value="149">Growth Ads $250/mo — +$149 management</option>
+            <option value="249">Scale Ads $500/mo — +$249 management</option>
+          </select>
+        </div>
+        <div class="est-group">
+          <label>Add-On: Content Photography</label>
+          <select class="est-select" id="estPhoto" onchange="calcEstimate()">
+            <option value="0">Not needed</option>
+            <option value="199">Monthly shoot brief — $199/mo</option>
+            <option value="349">Full monthly shoot — $349/mo</option>
+          </select>
+        </div>
+
+        <div class="est-summary">
+          <div>
+            <div class="est-total-label">Estimated Monthly Investment</div>
+            <div class="est-total-val" id="estTotal">$399</div>
+          </div>
+          <div class="est-breakdown" id="estBreakdown">
+            One-time setup · No recurring charges
+          </div>
+          <a href="#contact" class="btn-primary">Request Your Setup →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── FAQ ── -->
+<section id="faq">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label" style="justify-content:center">FAQ</div>
+      <h2>Questions We <em>Always</em> Get</h2>
+    </div>
+    <div class="faq-list reveal">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How fast can you set up my digital presence?
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">We typically go live within 48 business hours of your onboarding call. More complex builds (like custom websites with many pages) may take 3–5 days, but we always give you a clear timeline upfront.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Do I own my website and social accounts?
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">100%. Everything we build is yours. Your domain, your website files, your social accounts — you have full admin access from day one. We don't hold anything hostage.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What's the difference between the setup fee and monthly plans?
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">The setup fee is a one-time charge to build your digital foundation — website, social profiles, and branding. Monthly plans add ongoing management: regular posting, content creation, updates, and growth strategy. If you choose a monthly plan, your setup fee is discounted from $399 to $299.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Can I cancel my monthly plan anytime?
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Yes — no long-term contracts. You can cancel at the end of any billing period. We ask for 30 days notice so we can wrap up any active work cleanly. Everything you've paid for stays yours.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Do you work with businesses in any industry?
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Yes, we work with all types of local businesses — salons, restaurants, contractors, retail shops, fitness studios, medical offices, auto shops, and more. If you serve customers locally, we can help you reach them online.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What do you need from me to get started?
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Not much. After your onboarding call, we'll collect some basic business info, any existing logos or photos, and access credentials we need. Most clients spend less than 30 minutes on their end — we handle the rest.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How does content creation work on monthly plans?
+          <span class="faq-arrow">▾</span>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">We create professionally designed graphics, captions, and posts based on your brand and industry. Each month, you receive a content calendar for review and approval before anything goes live. On Growth and Premium plans, you can request revisions anytime.</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-wrapper">
+      <div class="contact-info">
+        <div class="section-label">Contact Us</div>
+        <h3>Ready to Build Your<br><em>Online Presence?</em></h3>
+        <p>Fill out the form and we'll get back to you within one business day. Most clients are onboarded within 48 hours of their first call.</p>
+
+        <a href="mailto:sales@northmodernmedia.com" class="contact-detail">
+          <div class="contact-icon">✉️</div>
+          sales@northmodernmedia.com
+        </a>
+        <a href="tel:+15701234567" class="contact-detail">
+          <div class="contact-icon">📞</div>
+          (570) 123-4567
+        </a>
+        <div class="contact-detail" style="cursor:default">
+          <div class="contact-icon">⏱</div>
+          Response time: &lt; 1 business day
+        </div>
+
+        <div style="margin-top:2rem;padding:1.4rem;background:var(--red-dim);border:1px solid rgba(232,25,26,0.25);border-radius:10px;">
+          <div style="font-family:var(--font-display);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--red);margin-bottom:0.4rem;">🔴 Limited Spots Available</div>
+          <div style="font-size:0.88rem;color:rgba(255,255,255,0.8);line-height:1.6;">We onboard a limited number of new clients each month to ensure quality. Reach out early to secure your spot.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="contact-form reveal">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" placeholder="John">
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" placeholder="Smith">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Business Name</label>
+            <input type="text" placeholder="Smith's Auto Repair">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="john@yourbusiness.com">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" placeholder="(570) 000-0000">
+          </div>
+          <div class="form-group">
+            <label>I'm interested in...</label>
+            <select>
+              <option>One-Time Setup ($399)</option>
+              <option>Basic Monthly ($397/mo)</option>
+              <option>Growth Monthly ($797/mo)</option>
+              <option>Premium Monthly ($1,497/mo)</option>
+              <option>Not sure — just exploring</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tell us about your business</label>
+            <textarea rows="4" placeholder="What does your business do, and what's your main goal online?"></textarea>
+          </div>
+          <button class="btn-primary" style="width:100%;justify-content:center;font-size:1rem;padding:1rem 2rem" onclick="submitForm(this)">
+            Send My Request →
+          </button>
+          <p style="font-size:0.78rem;color:var(--muted);text-align:center;margin-top:0.6rem">We respect your privacy. No spam, ever.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div style="max-width:1160px;margin:0 auto">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">North <span>Modern</span> Media</div>
+        <p class="footer-desc">A local digital presence agency helping businesses build, grow, and dominate their online market.</p>
+        <div style="margin-top:1.2rem;display:flex;gap:0.8rem">
+          <a href="https://instagram.com" style="width:34px;height:34px;border-radius:6px;background:var(--red-dim);border:1px solid rgba(232,25,26,0.25);display:flex;align-items:center;justify-content:center;font-size:0.9rem;text-decoration:none">📷</a>
+          <a href="https://facebook.com" style="width:34px;height:34px;border-radius:6px;background:var(--red-dim);border:1px solid rgba(232,25,26,0.25);display:flex;align-items:center;justify-content:center;font-size:0.9rem;text-decoration:none">👍</a>
+          <a href="https://linkedin.com" style="width:34px;height:34px;border-radius:6px;background:var(--red-dim);border:1px solid rgba(232,25,26,0.25);display:flex;align-items:center;justify-content:center;font-size:0.9rem;text-decoration:none">💼</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">Website Design</a></li>
+          <li><a href="#services">Social Media Setup</a></li>
+          <li><a href="#services">Branding</a></li>
+          <li><a href="#services">Content Creation</a></li>
+          <li><a href="#services">Paid Advertising</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#why">About Us</a></li>
+          <li><a href="#process">How It Works</a></li>
+          <li><a href="#testimonials">Client Stories</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:sales@northmodernmedia.com">sales@northmodernmedia.com</a></li>
+          <li><a href="#contact">Book a Call</a></li>
+          <li><a href="#contact">Get a Quote</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 North Modern Media. All rights reserved.</span>
+      <span>Built for local businesses · <a href="mailto:sales@northmodernmedia.com">sales@northmodernmedia.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── NAV SCROLL ──
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ── HAMBURGER ──
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMenu() { mobileMenu.classList.remove('open'); }
+
+  // ── SCROLL REVEAL ──
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ── FAQ ──
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // ── PRICING TOGGLE ──
+  function switchPlan(type) {
+    const btnOnetime = document.getElementById('btnOnetime');
+    const btnMonthly = document.getElementById('btnMonthly');
+    const onetimeSection = document.getElementById('onetimeSection');
+    const monthlySection = document.getElementById('monthlySection');
+
+    if (type === 'onetime') {
+      btnOnetime.classList.add('active');
+      btnMonthly.classList.remove('active');
+      onetimeSection.classList.add('active');
+      monthlySection.classList.remove('active');
+    } else {
+      btnMonthly.classList.add('active');
+      btnOnetime.classList.remove('active');
+      monthlySection.classList.add('active');
+      onetimeSection.classList.remove('active');
+    }
+  }
+
+  // ── ESTIMATOR ──
+  function calcEstimate() {
+    const plan = parseInt(document.getElementById('estPlan').value);
+    const platforms = parseInt(document.getElementById('estPlatforms').value);
+    const ads = parseInt(document.getElementById('estAds').value);
+    const photo = parseInt(document.getElementById('estPhoto').value);
+
+    const isMonthly = plan > 0;
+    const monthly = plan + platforms + ads + photo;
+    const setup = isMonthly ? 299 : 0;
+
+    const totalEl = document.getElementById('estTotal');
+    const breakdownEl = document.getElementById('estBreakdown');
+
+    if (!isMonthly) {
+      totalEl.textContent = '$399';
+      breakdownEl.innerHTML = 'One-time setup · No recurring charges';
+    } else {
+      totalEl.textContent = '$' + monthly.toLocaleString() + '/mo';
+      let breakdown = `$${plan}/mo base plan`;
+      if (platforms > 0) breakdown += ` + $${platforms} platforms`;
+      if (ads > 0) breakdown += ` + $${ads} ad mgmt`;
+      if (photo > 0) breakdown += ` + $${photo} content`;
+      breakdown += `<br>+ $${setup} one-time setup fee`;
+      breakdownEl.innerHTML = breakdown;
+    }
+  }
+
+  // ── CONTACT FORM ──
+  function submitForm(btn) {
+    btn.textContent = '✓ Request Sent — We\'ll Be In Touch Soon!';
+    btn.style.background = '#16a34a';
+    btn.style.boxShadow = '0 4px 24px rgba(22,163,74,0.3)';
+    btn.disabled = true;
+  }
+
+  // ── STAGGER SERVICE CARDS ──
+  document.querySelectorAll('.service-card').forEach((card, i) => {
+    card.style.transitionDelay = `${i * 60}ms`;
+  });
+</script>
+</body>
+</html>
