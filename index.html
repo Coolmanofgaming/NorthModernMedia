@@ -108,7 +108,7 @@ h2 em{font-style:normal;color:var(--red)}
 
 /* WHY */
 #why{padding:100px 0}
-.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-top:1rem}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;margin-top:0}
 .why-list{margin-top:2rem;display:flex;flex-direction:column;gap:1rem}
 .why-item{display:flex;gap:1rem;align-items:flex-start;padding:1.2rem;border:1px solid var(--border);border-radius:10px;background:var(--surface);transition:border-color .25s,transform .2s}
 .why-item:hover{border-color:rgba(232,25,26,.4);transform:translateX(6px)}
@@ -450,6 +450,46 @@ body.editor-active nav{left:260px;top:56px}
 .cd-divider{height:1px;background:rgba(255,255,255,.06);margin:.3rem 0}
 
 </style>
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  // ══ REPLACE THESE WITH YOUR FIREBASE PROJECT CONFIG ══
+  const firebaseConfig = {
+    apiKey: "AIzaSyBb4EAZV76b7gJAwSSz9Fse2nNBRIqp624",
+    authDomain: "northmodernmedia.firebaseapp.com",
+    databaseURL: "https://northmodernmedia-default-rtdb.firebaseio.com",
+    projectId: "northmodernmedia",
+    storageBucket: "northmodernmedia.firebasestorage.app",
+    messagingSenderId: "763844813686",
+    appId: "1:763844813686:web:a1ffdbd79e5f2344cb5057",
+    measurementId: "G-7H6ETDN00W"
+  };
+  // ════════════════════════════════════════════════════
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const leadsRef = ref(db, 'leads');
+
+  // Listen for real-time updates
+  onValue(leadsRef, (snapshot) => {
+    const data = snapshot.val();
+    window._firebaseLeads = [];
+    if(data){
+      Object.entries(data).forEach(([key, val]) => {
+        window._firebaseLeads.unshift({...val, _key: key});
+      });
+    }
+    window.leadsData = window._firebaseLeads;
+    if(typeof updateLeadsBadge === 'function') updateLeadsBadge();
+    if(typeof renderLeads === 'function') renderLeads();
+  });
+
+  window._fbPush = (lead) => push(leadsRef, lead);
+  window._fbUpdate = (key, data) => update(ref(db, 'leads/' + key), data);
+  window._fbRemove = (key) => remove(ref(db, 'leads/' + key));
+</script>
 </head>
 <body>
 
@@ -550,11 +590,13 @@ body.editor-active nav{left:260px;top:56px}
 <!-- ════ WHY ════ -->
 <section id="why" class="editable-zone">
   <div class="container">
+    <div class="why-heading" style="margin-bottom:2.5rem">
+      <div class="section-label" data-editable>Why Choose Us</div>
+      <h2 data-editable>Built for <em>Local</em><br>Businesses. Period.</h2>
+      <p class="section-sub" data-editable>We're not a one-size-fits-all platform. We're a real team that understands local markets and builds real results.</p>
+    </div>
     <div class="why-grid">
       <div>
-        <div class="section-label" data-editable>Why Choose Us</div>
-        <h2 data-editable>Built for <em>Local</em><br>Businesses. Period.</h2>
-        <p class="section-sub" data-editable>We're not a one-size-fits-all platform. We're a real team that understands local markets and builds real results.</p>
         <div class="why-list reveal">
           <div class="why-item"><div class="why-check">✓</div><div class="why-item-text"><h4 data-editable>No Long-Term Contracts</h4><p data-editable>Stay because results keep you, not fine print. Cancel monthly plans anytime.</p></div></div>
           <div class="why-item"><div class="why-check">✓</div><div class="why-item-text"><h4 data-editable>Fast 72-Hour Setup</h4><p data-editable>Most agencies take weeks. We get your foundation live within three business days.</p></div></div>
@@ -569,7 +611,7 @@ body.editor-active nav{left:260px;top:56px}
           <div class="metric-row"><span class="metric-name" data-editable>Instagram Followers Growth</span><div style="text-align:right"><div class="metric-val" data-editable>+830</div><div class="metric-change" data-editable>↑ First 90 days</div></div></div>
           <div class="metric-row"><span class="metric-name" data-editable>Google Review Impressions</span><div style="text-align:right"><div class="metric-val" data-editable>12K</div><div class="metric-change" data-editable>↑ 3× baseline</div></div></div>
           <div class="metric-row"><span class="metric-name" data-editable>Avg. Cost Per Lead (ads)</span><div style="text-align:right"><div class="metric-val" data-editable>$4.80</div><div class="metric-change" style="color:#60a5fa" data-editable>Local avg: $14</div></div></div>
-          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)" data-editable>Averages across active monthly clients · Updated Q1 2025</div>
+          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)" data-editable>Averages across active monthly clients · Updated Q1 2026</div>
         </div>
       </div>
     </div>
@@ -641,7 +683,7 @@ body.editor-active nav{left:260px;top:56px}
         <div class="est-group"><label>Plan Type</label><select class="est-select" id="estPlan" onchange="calcEstimate()"><option value="0">One-Time Setup Only — $399</option><option value="397">Basic Monthly — $397/mo + $299 setup</option><option value="797">Growth Monthly — $797/mo + $299 setup</option><option value="1497">Premium Monthly — $1,497/mo + $299 setup</option></select></div>
         <div class="est-group"><label>Add-On: Extra Platforms</label><select class="est-select" id="estPlatforms" onchange="calcEstimate()"><option value="0">None</option><option value="49">+1 Platform — $49/mo</option><option value="89">+2 Platforms — $89/mo</option><option value="129">+3 Platforms — $129/mo</option></select></div>
         <div class="est-group"><label>Add-On: Ad Spend Budget</label><select class="est-select" id="estAds" onchange="calcEstimate()"><option value="0">No Ads</option><option value="99">Starter Ads $100/mo — +$99 management</option><option value="149">Growth Ads $250/mo — +$149 management</option><option value="249">Scale Ads $500/mo — +$249 management</option></select></div>
-        <div class="est-group"><label>Add-On: Content Photography & Videography</label><select class="est-select" id="estPhoto" onchange="calcEstimate()"><option value="0">Not needed</option><option value="199">Monthly shoot brief — $199/mo</option><option value="349">Full monthly shoot — $349/mo</option></select></div>
+        <div class="est-group"><label>Add-On: Content Photography &amp; Videography</label><select class="est-select" id="estPhoto" onchange="calcEstimate();togglePhotoDisclaimer()"><option value="0">Not needed</option><option value="199">1 Visit — $199</option><option value="398">2 Visits — $398</option><option value="597">3 Visits — $597</option></select><div id="photoDisclaimer" style="display:none;margin-top:.5rem;font-size:.78rem;color:var(--red);line-height:1.5;font-style:italic;">* Pricing above reflects estimated averages. Final rates will be confirmed and tailored to your specific needs during your initial consultation.</div></div>
         <div class="est-summary"><div><div class="est-total-label">Estimated Monthly Investment</div><div class="est-total-val" id="estTotal">$399</div></div><div class="est-breakdown" id="estBreakdown">One-time setup · No recurring charges</div><a href="#contact" class="btn-primary" data-editable>Request Your Setup →</a></div>
       </div>
     </div>
@@ -679,7 +721,7 @@ body.editor-active nav{left:260px;top:56px}
         <div class="section-label" data-editable>Contact Us</div>
         <h3 data-editable>Ready to Build Your<br><em>Online Presence?</em></h3>
         <p data-editable>Fill out the form and we'll get back to you within one business day. Most clients are onboarded within 72 hours of their first call.</p>
-        <a href="mailto:sales@northmodernmedia.com" class="contact-detail"><div class="contact-icon">✉️</div><span data-editable>sales@northmodernmedia.com</span></a>
+        <a href="mailto:josh@northmodernmedia.com" class="contact-detail"><div class="contact-icon">✉️</div><span data-editable>josh@northmodernmedia.com</span></a>
         <a href="tel:+15701234567" class="contact-detail"><div class="contact-icon">📞</div><span data-editable>(570) 123-4567</span></a>
         <div class="contact-detail" style="cursor:default"><div class="contact-icon">⏱</div><span data-editable>Response time: &lt; 1 business day</span></div>
         <div style="margin-top:2rem;padding:1.4rem;background:var(--red-dim);border:1px solid rgba(232,25,26,.25);border-radius:10px;">
@@ -711,18 +753,18 @@ body.editor-active nav{left:260px;top:56px}
         <div class="footer-logo" data-editable>North <span>Modern</span> Media</div>
         <p class="footer-desc" data-editable>A local digital presence agency helping businesses build, grow, and dominate their online market.</p>
         <div style="margin-top:1.2rem;display:flex;gap:.8rem">
-          <a href="https://instagram.com" style="width:34px;height:34px;border-radius:6px;background:var(--red-dim);border:1px solid rgba(232,25,26,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;text-decoration:none">📷</a>
-          <a href="https://facebook.com" style="width:34px;height:34px;border-radius:6px;background:var(--red-dim);border:1px solid rgba(232,25,26,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;text-decoration:none">👍</a>
-          <a href="https://linkedin.com" style="width:34px;height:34px;border-radius:6px;background:var(--red-dim);border:1px solid rgba(232,25,26,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;text-decoration:none">💼</a>
+          <a href="https://www.instagram.com/northmodernmedia?igsh=MXEzNTZwcGZsN3F3NA==" style="width:34px;height:34px;border-radius:6px;background:var(--red-dim);border:1px solid rgba(232,25,26,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;text-decoration:none"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><defs><radialGradient id="ig1" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><path fill="url(#ig1)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+          <a href="https://tiktok.com" style="width:34px;height:34px;border-radius:6px;background:var(--red-dim);border:1px solid rgba(232,25,26,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;text-decoration:none"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill="#ffffff" d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.74a4.85 4.85 0 01-1.01-.05z"/></svg></a>
+          <a href="https://facebook.com" style="width:34px;height:34px;border-radius:6px;background:var(--red-dim);border:1px solid rgba(232,25,26,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;text-decoration:none"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill="#ffffff" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
         </div>
       </div>
       <div class="footer-col"><h4 data-editable>Services</h4><ul><li><a href="#services" data-editable>Website Design</a></li><li><a href="#services" data-editable>Social Media Setup</a></li><li><a href="#services" data-editable>Branding</a></li><li><a href="#services" data-editable>Content Creation</a></li><li><a href="#services" data-editable>Paid Advertising</a></li></ul></div>
       <div class="footer-col"><h4 data-editable>Company</h4><ul><li><a href="#why" data-editable>About Us</a></li><li><a href="#process" data-editable>How It Works</a></li><li><a href="#testimonials" data-editable>Client Stories</a></li><li><a href="#pricing" data-editable>Pricing</a></li><li><a href="#faq" data-editable>FAQ</a></li></ul></div>
-      <div class="footer-col"><h4 data-editable>Contact</h4><ul><li><a href="mailto:sales@northmodernmedia.com" data-editable>sales@northmodernmedia.com</a></li><li><a href="#contact" data-editable>Book a Call</a></li><li><a href="#contact" data-editable>Get a Quote</a></li></ul></div>
+      <div class="footer-col"><h4 data-editable>Contact</h4><ul><li><a href="mailto:josh@northmodernmedia.com" data-editable>josh@northmodernmedia.com</a></li><li><a href="#contact" data-editable>Book a Call</a></li><li><a href="#contact" data-editable>Get a Quote</a></li></ul></div>
     </div>
     <div class="footer-bottom">
-      <span data-editable>© 2025 North Modern Media. All rights reserved.</span>
-      <span>Built for local businesses · <a href="mailto:sales@northmodernmedia.com" data-editable>sales@northmodernmedia.com</a></span>
+      <span data-editable>© 2026 North Modern Media. All rights reserved.</span>
+      <span>Built for local businesses by: <a href="mailto:josh@northmodernmedia.com" data-editable>josh@northmodernmedia.com</a></span>
     </div>
   </div>
 </footer>
@@ -842,7 +884,7 @@ body.editor-active nav{left:260px;top:56px}
 <!-- Hidden file input for image upload -->
 <input type="file" id="imgFileInput" accept="image/*" onchange="handleImageUpload(event)">
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ════════════════════════════════════════════
 // PAGE SCRIPTS
 // ════════════════════════════════════════════
@@ -903,8 +945,8 @@ function submitForm(btn){
   const plan=document.getElementById('cf_plan').value;
   const msg=document.getElementById('cf_msg').value.trim()||'(No message)';
   const date=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  leadsData.unshift({id:nextId++,first,last,biz,email,phone,plan,msg,status:'New',date});
-  updateLeadsBadge();
+  const newLead = {id: Date.now(), first, last, biz, email, phone, plan, msg, status:'New', date};
+  if(window._fbPush){ window._fbPush(newLead); } else { leadsData.unshift(newLead); updateLeadsBadge(); }
   btn.textContent='✓ Request Sent — We\'ll Be In Touch Soon!';
   btn.style.background='#16a34a';btn.style.boxShadow='0 4px 24px rgba(22,163,74,.3)';btn.disabled=true;
 }
@@ -912,6 +954,11 @@ function submitForm(btn){
 // ════════════════════════════════════════════
 // ADMIN PASSWORD
 // ════════════════════════════════════════════
+function togglePhotoDisclaimer(){
+  const sel=document.getElementById('estPhoto');
+  const disc=document.getElementById('photoDisclaimer');
+  if(disc) disc.style.display=(sel.value!=='0')?'block':'none';
+}
 function openAdminLogin(){
   document.getElementById('adminPasswordOverlay').classList.add('show');
   setTimeout(()=>document.getElementById('pwInput').focus(),120);
@@ -922,7 +969,7 @@ function closeAdminLogin(){
   document.getElementById('pwError').textContent='';
 }
 function checkPassword(){
-  if(document.getElementById('pwInput').value==='123'){ closeAdminLogin(); openAdmin(); }
+  if(document.getElementById('pwInput').value==='shams'){ closeAdminLogin(); openAdmin(); }
   else {
     document.getElementById('pwError').textContent='Incorrect password. Try again.';
     const inp=document.getElementById('pwInput');
@@ -1241,16 +1288,16 @@ function renderLeads(){
   }).join('');
 }
 function cycleStatus(id){
-  const l=leadsData.find(x=>x.id===id);if(!l)return;
+  const l=leadsData.find(x=>x.id===id);if(!l)return; if(l._key && window._fbUpdate){ window._fbUpdate(l._key, {status:s}); }
   const order=['New','Contacted','Closed'];
   l.status=order[(order.indexOf(l.status)+1)%order.length];
   updateLeadsBadge();renderLeads();
 }
 function deleteLead(id){
-  if(confirm('Remove this lead?')){leadsData=leadsData.filter(l=>l.id!==id);updateLeadsBadge();renderLeads();}
+  if(confirm('Remove this lead?')){ const lead=leadsData.find(x=>x.id===id); if(lead && lead._key && window._fbRemove){ window._fbRemove(lead._key); } else { leadsData=leadsData.filter(l=>l.id!==id); updateLeadsBadge(); renderLeads(); } }
 }
 function viewLead(id){
-  const l=leadsData.find(x=>x.id===id);if(!l)return;
+  const l=leadsData.find(x=>x.id===id);if(!l)return; if(l._key && window._fbUpdate){ window._fbUpdate(l._key, {status:s}); }
   const sc=l.status==='New'?'status-new':l.status==='Contacted'?'status-contacted':'status-closed';
   const dot=l.status==='New'?'🔴':l.status==='Contacted'?'🟡':'🟢';
   document.getElementById('ldTitle').textContent=`${l.first} ${l.last} — ${l.biz}`;
@@ -1355,52 +1402,91 @@ document.addEventListener('keydown',function(e){
 
     <div class="cpage-hero">
       <div class="cpage-eyebrow">Get in Touch</div>
-      <h2 class="cpage-title">Say <span>Hello</span></h2>
+      <h2 class="cpage-title">Meet <span>Our Team</span></h2>
       <p class="cpage-sub">Reach out to the right person directly — we respond fast.</p>
     </div>
 
-    <div class="cpage-grid">
+    <!-- Team section dividers -->
+    <div style="max-width:1000px;margin:0 auto;width:100%">
 
-      <!-- Owner & Creative -->
-      <div class="cpage-card">
-        <div class="cpage-card-tag">Owner &amp; Creative</div>
-        <div class="cpage-avatar">JO</div>
-        <div class="cpage-card-name">Josh</div>
-        <div class="cpage-card-emails">
-          <a href="mailto:josh@northmodernmedia.com" class="cpage-email-bubble">
-            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
-            josh@northmodernmedia.com
-          </a>
+      <!-- LEADERSHIP -->
+      <div style="margin-bottom:2.5rem">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);white-space:nowrap">Leadership</div>
+          <div style="flex:1;height:1px;background:rgba(255,255,255,.08)"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem">
+
+          <div class="cpage-card">
+            <div class="cpage-card-tag">Owner &amp; Creative Director</div>
+            <div class="cpage-avatar">JO</div>
+            <div class="cpage-card-name">Josh</div>
+            <div class="cpage-card-emails">
+              <a href="mailto:josh@northmodernmedia.com" class="cpage-email-bubble">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                josh@northmodernmedia.com
+              </a>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- Sales -->
-      <div class="cpage-card">
-        <div class="cpage-card-tag">Sales</div>
-        <div class="cpage-avatar">DS</div>
-        <div class="cpage-card-name">Dante</div>
-        <div class="cpage-card-emails">
-          <a href="mailto:dante@northmodernmedia.com" class="cpage-email-bubble">
-            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
-            dante@northmodernmedia.com
-          </a>
+      <!-- SALES TEAM -->
+      <div style="margin-bottom:2.5rem">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);white-space:nowrap">Sales Team</div>
+          <div style="flex:1;height:1px;background:rgba(255,255,255,.08)"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem">
+
+          <div class="cpage-card">
+            <div class="cpage-card-tag">Sales Manager</div>
+            <div class="cpage-avatar">DS</div>
+            <div class="cpage-card-name">Dante</div>
+            <div class="cpage-card-emails">
+              <a href="mailto:dante@northmodernmedia.com" class="cpage-email-bubble">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                dante@northmodernmedia.com
+              </a>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- Lead Tech -->
-      <div class="cpage-card">
-        <div class="cpage-card-tag">Lead Tech</div>
-        <div class="cpage-avatar">DL</div>
-        <div class="cpage-card-name">Dan</div>
-        <div class="cpage-card-emails">
-          <a href="mailto:dan@northmodernmedia.com" class="cpage-email-bubble">
-            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
-            dan@northmodernmedia.com
-          </a>
-          <a href="mailto:jacobh.nmm@gmail.com" class="cpage-email-bubble">
-            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
-            jacobh.nmm@gmail.com
-          </a>
+      <!-- TECH TEAM -->
+      <div style="margin-bottom:2.5rem">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);white-space:nowrap">Tech Team</div>
+          <div style="flex:1;height:1px;background:rgba(255,255,255,.08)"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem">
+
+          <div class="cpage-card">
+            <div class="cpage-card-tag">Tech Supervisor</div>
+            <div class="cpage-avatar">DT</div>
+            <div class="cpage-card-name">Dan</div>
+            <div class="cpage-card-emails">
+              <a href="mailto:dan@northmodernmedia.com" class="cpage-email-bubble">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                dan@northmodernmedia.com
+              </a>
+            </div>
+          </div>
+
+          <div class="cpage-card">
+            <div class="cpage-card-tag">Tech Assistant</div>
+            <div class="cpage-avatar">JH</div>
+            <div class="cpage-card-name">Jacob</div>
+            <div class="cpage-card-emails">
+              <a href="mailto:jacobh.nmm@gmail.com" class="cpage-email-bubble">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                jacobh.nmm@gmail.com
+              </a>
+            </div>
+          </div>
+
         </div>
       </div>
 
